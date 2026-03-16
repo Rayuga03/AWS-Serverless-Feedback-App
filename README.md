@@ -9,7 +9,7 @@ S3
 Hosts static web files (HTML, CSS, JS)
 
 API Gateway
-Exposes REST APIs
+Exposes APIs & manages routing
 
 Lambda
 Processes GET and POST requests
