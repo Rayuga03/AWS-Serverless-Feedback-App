@@ -1,47 +1,59 @@
 // Add your API endpoint here
-var API_ENDPOINT = "API_ENDPOIND_PASTE_HERE";
+const API_ENDPOINT = "PASTE_YOUR_API_ENDPOINT_HERE";
 
-// AJAX POST request to save student data
-document.getElementById("savestudent").onclick = function(){
-    var inputData = {
-        "studentid": $('#studentid').val(),
-        "name": $('#name').val(),
-        "class": $('#class').val(),
-        "age": $('#age').val()
+// POST: Save student data
+document.getElementById("savestudent").onclick = async function () {
+
+    const inputData = {
+        studentid: document.getElementById("studentid").value,
+        name: document.getElementById("name").value,
+        class: document.getElementById("class").value,
+        age: document.getElementById("age").value
     };
-    $.ajax({
-        url: API_ENDPOINT,
-        type: 'POST',
-        data:  JSON.stringify(inputData),
-        contentType: 'application/json; charset=utf-8',
-        success: function (response) {
-            document.getElementById("studentSaved").innerHTML = "Student Data Saved!";
-        },
-        error: function () {
-            alert("Error saving student data.");
-        }
-    });
-}
 
-// AJAX GET request to retrieve all students
-document.getElementById("getstudents").onclick = function(){  
-    $.ajax({
-        url: API_ENDPOINT,
-        type: 'GET',
-        contentType: 'application/json; charset=utf-8',
-        success: function (response) {
-            $('#studentTable tr').slice(1).remove();
-            jQuery.each(response, function(i, data) {          
-                $("#studentTable").append("<tr> \
-                    <td>" + data['studentid'] + "</td> \
-                    <td>" + data['name'] + "</td> \
-                    <td>" + data['class'] + "</td> \
-                    <td>" + data['age'] + "</td> \
-                    </tr>");
-            });
-        },
-        error: function () {
-            alert("Error retrieving student data.");
+    try {
+        const response = await fetch(API_ENDPOINT, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(inputData)
+        });
+
+        const data = await response.json();
+
+        document.getElementById("studentSaved").innerText = "Student Data Saved!";
+
+    } catch (error) {
+        alert("Error saving student data.");
+    }
+};
+
+
+// GET: Retrieve student data
+document.getElementById("getstudents").onclick = async function () {
+
+    try {
+        const response = await fetch(API_ENDPOINT);
+        const students = await response.json();
+
+        const table = document.getElementById("studentTable");
+
+        // Clear old rows except header
+        while (table.rows.length > 1) {
+            table.deleteRow(1);
         }
-    });
-}
+
+        students.forEach(data => {
+            const row = table.insertRow();
+
+            row.insertCell(0).innerText = data.studentid;
+            row.insertCell(1).innerText = data.name;
+            row.insertCell(2).innerText = data.class;
+            row.insertCell(3).innerText = data.age;
+        });
+
+    } catch (error) {
+        alert("Error retrieving student data.");
+    }
+};
