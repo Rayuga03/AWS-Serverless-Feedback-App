@@ -1,5 +1,5 @@
 // Add your API endpoint here
-const API_ENDPOINT = "PASTE_YOUR_API_ENDPOINT_HERE";
+const API_ENDPOINT = "https://your-api-id.execute-api.ap-south-1.amazonaws.com/students";
 
 // POST: Save student data
 document.getElementById("savestudent").onclick = async function () {
